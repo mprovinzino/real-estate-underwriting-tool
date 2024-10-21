@@ -13,6 +13,7 @@ address = st.text_input("Address", "123 Main St")
 state = st.selectbox("State", ["Georgia", "Florida", "Texas", "California"])
 market_rent = st.number_input("Market Rent ($)", min_value=0, value=2500)
 arv = st.number_input("After Repair Value (ARV) ($)", min_value=0, value=300000)
+square_footage = st.number_input("Square Footage of Property", min_value=0, value=1800)
 
 # Rehab Estimation Section
 st.header("Rehab Estimation")
@@ -20,76 +21,109 @@ st.header("Rehab Estimation")
 # Data for Rehab Estimation
 rehab_data = {
     "General": [
-        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 100, "quantity": 1},
-        {"description": "Demo", "unit": "Guy/day", "unit_cost": 300, "quantity": 1},
-        {"description": "Trash out", "unit": "Per", "unit_cost": 500, "quantity": 1},
-        {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725, "quantity": 1},
-        {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500, "quantity": 1},
-        {"description": "Termite treatment", "unit": "House", "unit_cost": 375, "quantity": 1},
-        {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500, "quantity": 1},
+        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 100},
+        {"description": "Demo", "unit": "Guy/day", "unit_cost": 300},
+        {"description": "Trash out", "unit": "Per", "unit_cost": 500},
+        {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725},
+        {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500},
+        {"description": "Termite treatment", "unit": "House", "unit_cost": 375},
+        {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500},
     ],
     "Electrical": [
-        {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45, "quantity": 1800},
-        {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50, "quantity": 1},
-        {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750, "quantity": 1},
-        {"description": "GFCI", "unit": "Per", "unit_cost": 65, "quantity": 1},
-        {"description": "Smoke detectors", "unit": "per unit", "unit_cost": 30, "quantity": 1},
-        {"description": "New Panel Box - DFW", "unit": "", "unit_cost": 2000, "quantity": 1},
-    ],
-    "Exterior": [
-        {"description": "Siding repair", "unit": "", "unit_cost": 600, "quantity": 1},
-        {"description": "Complete New Siding", "unit": "sqft", "unit_cost": 3.05, "quantity": 1800},
-        {"description": "Paint garage door (overhead)", "unit": "per door", "unit_cost": 100, "quantity": 1},
-        {"description": "Paint exterior door", "unit": "per door", "unit_cost": 250, "quantity": 1},
-        {"description": "Fascia repair", "unit": "LF", "unit_cost": 8, "quantity": 1},
-        {"description": "Soffit repair", "unit": "LF", "unit_cost": 10, "quantity": 1},
-        {"description": "Caulk/general maint", "unit": "House", "unit_cost": 350, "quantity": 1},
-        {"description": "Exterior Paint - DFW", "unit": "sqft", "unit_cost": 2.25, "quantity": 1724},
-        {"description": "Kwikset Smartkey Lockset", "unit": "LS", "unit_cost": 400, "quantity": 1},
-        {"description": "Overhead door (Double)", "unit": "per", "unit_cost": 1300, "quantity": 1},
-        {"description": "Garage door opener", "unit": "per", "unit_cost": 385, "quantity": 1},
-        {"description": "Yard clean", "unit": "yard", "unit_cost": 250, "quantity": 1},
-        {"description": "Fence replacement", "unit": "LF", "unit_cost": 24, "quantity": 1},
-        {"description": "Trim tree", "unit": "per tree", "unit_cost": 350, "quantity": 1},
+        {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45},
+        {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50},
+        {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750},
+        {"description": "GFCI", "unit": "Per", "unit_cost": 65},
+        {"description": "Smoke detectors", "unit": "per unit", "unit_cost": 30},
+        {"description": "New Panel Box - DFW", "unit": "Per", "unit_cost": 2000},
     ],
     "Kitchen & Laundry": [
-        {"description": "Appl, Range", "unit": "per", "unit_cost": 750, "quantity": 1},
-        {"description": "Appl, Microwave with vent", "unit": "per", "unit_cost": 375, "quantity": 1},
-        {"description": "Appl, Dishwasher", "unit": "per", "unit_cost": 650, "quantity": 1},
-        {"description": "Cabinets, Regular", "unit": "LF", "unit_cost": 110, "quantity": 20},
-        {"description": "Granite - DFW", "unit": "LF", "unit_cost": 55, "quantity": 40},
-        {"description": "Appl, Wall oven", "unit": "per", "unit_cost": 1100, "quantity": 1},
-        {"description": "Cabinet, base under sink", "unit": "per", "unit_cost": 225, "quantity": 1},
-        {"description": "Sink, Kitchen", "unit": "per", "unit_cost": 225, "quantity": 1},
+        {"description": "Appl, Range", "unit": "per", "unit_cost": 750},
+        {"description": "Appl, Microwave with vent", "unit": "per", "unit_cost": 375},
+        {"description": "Appl, Dishwasher", "unit": "per", "unit_cost": 650},
+        {"description": "Cabinets, Regular", "unit": "LF", "unit_cost": 110},
+        {"description": "Granite - DFW", "unit": "LF", "unit_cost": 55},
+        {"description": "Appl, Wall oven", "unit": "per", "unit_cost": 1100},
+        {"description": "Cabinet, base under sink", "unit": "per", "unit_cost": 225},
+        {"description": "Sink, Kitchen", "unit": "per", "unit_cost": 225},
     ],
-    "Plumbing": [
-        {"description": "Pipe repair", "unit": "Per spot", "unit_cost": 80, "quantity": 1},
-        {"description": "Sewer scope", "unit": "House", "unit_cost": 375, "quantity": 1},
-        {"description": "Sub slab contingency", "unit": "", "unit_cost": 1500, "quantity": 1},
-        {"description": "Water Heater - DFW", "unit": "", "unit_cost": 1300, "quantity": 1},
-    ],
-    "HVAC": [
-        {"description": "3 Ton - DFW", "unit": "", "unit_cost": 5750, "quantity": 1},
-        {"description": "4 Ton - DFW", "unit": "", "unit_cost": 6250, "quantity": 1},
-        {"description": "Furnace - DFW", "unit": "", "unit_cost": 1500, "quantity": 1},
-        {"description": "Ductwork (new)", "unit": "house", "unit_cost": 3000, "quantity": 1},
-        {"description": "Thermostat", "unit": "per", "unit_cost": 175, "quantity": 1},
-        {"description": "Cage for AC unit", "unit": "Per", "unit_cost": 350, "quantity": 1},
-    ]
+    # Add more sections as needed...
 }
 
-# Loop through sections and items, allowing users to select them
-total_rehab_cost = 0
-for section, items in rehab_data.items():
-    st.subheader(section)
-    for item in items:
-        checkbox_label = f"{item['description']} ({item['unit']}) - ${item['unit_cost']:.2f} per unit"
-        selected = st.checkbox(checkbox_label, value=(item['unit_cost'] > 0), key=f"{section}_{item['description']}")
-        if selected:
-            total_item_cost = item['unit_cost'] * item['quantity']
-            total_rehab_cost += total_item_cost
-            st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+# Create columns for better arrangement
+col1, col2 = st.columns(2)
 
+# Initialize total rehab cost
+total_rehab_cost = 0
+
+# Display sections in columns with expanders
+with col1:
+    with st.expander("General"):
+        for item in rehab_data["General"]:
+            # If the unit is 'sqft', use the square footage as the default quantity.
+            if item["unit"] == "sqft":
+                quantity = st.number_input(
+                    f"{item['description']} - Quantity ({item['unit']})",
+                    min_value=0.0, value=float(square_footage),
+                    key=f"General_{item['description']}_qty"
+                )
+            else:
+                quantity = st.number_input(
+                    f"{item['description']} - Quantity ({item['unit']})",
+                    min_value=0.0, value=1.0,
+                    key=f"General_{item['description']}_qty"
+                )
+            selected = st.checkbox(
+                f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
+                key=f"General_{item['description']}"
+            )
+            if selected:
+                total_item_cost = item["unit_cost"] * quantity
+                total_rehab_cost += total_item_cost
+                st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+
+    with st.expander("Kitchen & Laundry"):
+        for item in rehab_data["Kitchen & Laundry"]:
+            quantity = st.number_input(
+                f"{item['description']} - Quantity ({item['unit']})",
+                min_value=0.0, value=1.0,
+                key=f"Kitchen_{item['description']}_qty"
+            )
+            selected = st.checkbox(
+                f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
+                key=f"Kitchen_{item['description']}"
+            )
+            if selected:
+                total_item_cost = item["unit_cost"] * quantity
+                total_rehab_cost += total_item_cost
+                st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+
+with col2:
+    with st.expander("Electrical"):
+        for item in rehab_data["Electrical"]:
+            # Use square footage as default quantity if unit is 'sqft'
+            if item["unit"] == "sqft":
+                quantity = st.number_input(
+                    f"{item['description']} - Quantity ({item['unit']})",
+                    min_value=0.0, value=float(square_footage),
+                    key=f"Electrical_{item['description']}_qty"
+                )
+            else:
+                quantity = st.number_input(
+                    f"{item['description']} - Quantity ({item['unit']})",
+                    min_value=0.0, value=1.0,
+                    key=f"Electrical_{item['description']}_qty"
+                )
+            selected = st.checkbox(
+                f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
+                key=f"Electrical_{item['description']}"
+            )
+            if selected:
+                total_item_cost = item["unit_cost"] * quantity
+                total_rehab_cost += total_item_cost
+                st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+
+# Display the total rehab cost
 st.write(f"**Total Rehab Cost:** ${total_rehab_cost:,.2f}")
 
 # ARV-based Offer Calculation
@@ -120,4 +154,3 @@ vacancy = st.number_input("Vacancy Rate (% of Rent)", min_value=0.0, max_value=1
 # Calculate net cash flow considering the expenses
 net_cash_flow = annual_rent * (1 - (property_management + maintenance + vacancy))
 st.write(f"**Estimated Annual Net Cash Flow:** ${net_cash_flow:,.2f}")
-
