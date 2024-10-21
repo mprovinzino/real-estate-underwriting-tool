@@ -109,3 +109,27 @@ annual_rent = monthly_rent * 12
 total_investment = total_rehab_cost + max_suggested_offer
 
 cap_rate = (annual_rent / total
+import streamlit as st
+import pandas as pd
+
+# Set up the page title and layout
+st.set_page_config(page_title="Real Estate Underwriting Tool", layout="wide")
+
+# Input Section
+st.title("Real Estate Underwriting Tool")
+
+# Property Details
+st.header("Property Details")
+address = st.text_input("Address", "123 Main St")
+state = st.selectbox("State", ["Georgia", "Florida", "Texas", "California"])
+market_rent = st.number_input("Market Rent ($)", min_value=0, value=2500)
+arv = st.number_input("After Repair Value (ARV) ($)", min_value=0, value=300000)
+
+# Rehab Estimation Section
+st.header("Rehab Estimation")
+
+# Data for Rehab Estimation
+rehab_data = {
+    "General": [
+        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 100, "quantity": 1},
+        {"description": "Demo", "unit
