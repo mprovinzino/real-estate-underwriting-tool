@@ -7,23 +7,29 @@ st.set_page_config(page_title="Real Estate Underwriting Tool", layout="wide")
 # Input Section
 st.title("Real Estate Underwriting Tool")
 
-# Property Details
-st.header("Property Details")
-address = st.text_input("Address", "123 Main St")
-state = st.selectbox("State", ["Georgia", "Florida", "Texas", "California"])
-beds = st.number_input("Number of Beds", min_value=0, value=3)
-baths = st.number_input("Number of Baths", min_value=0.0, value=2.0)
-year_built = st.number_input("Year Built", min_value=1800, max_value=2024, value=1990)
-square_footage = st.number_input("Square Footage of Property", min_value=0, value=1800)
-estimated_arv = st.number_input("Estimated After Repair Value (ARV) ($)", min_value=0, value=300000)
-estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
+# Group inputs using expanders and columns for better layout
+with st.expander("Property Details", expanded=True):
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        address = st.text_input("Address", "123 Main St")
+        state = st.selectbox("State", ["Georgia", "Florida", "Texas", "California"])
+        year_built = st.number_input("Year Built", min_value=1800, max_value=2024, value=1990)
+    with col2:
+        beds = st.number_input("Number of Beds", min_value=0, value=3)
+        baths = st.number_input("Number of Baths", min_value=0.0, value=2.0)
+        square_footage = st.number_input("Square Footage of Property", min_value=0, value=1800)
+    with col3:
+        estimated_arv = st.number_input("Estimated After Repair Value (ARV) ($)", min_value=0, value=300000)
+        estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
+        market_rent = estimated_rent
+
+    # Display entered property details in a summary box for easy review
+    st.info(f"**Property Summary:** {address}, {state}\n\n"
+            f"**Beds:** {beds} | **Baths:** {baths} | **Year Built:** {year_built}\n"
+            f"**Square Footage:** {square_footage} sqft | **Estimated ARV:** ${estimated_arv:,.2f} | **Estimated Rent:** ${estimated_rent:,.2f}")
 
 # Use the estimated ARV and rent in calculations where appropriate
 arv = estimated_arv
-market_rent = estimated_rent
-
-# Display entered property details for review
-st.write(f"**Property Details:** {beds} beds | {baths} baths | Built in {year_built} | {square_footage} sqft")
 
 # Rehab Estimation Section
 st.header("Rehab Estimation")
