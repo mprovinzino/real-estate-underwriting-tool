@@ -23,7 +23,14 @@ repair_items = {
     "Quantity": [0, 0, 0, 0, 0, 0]
 }
 df = pd.DataFrame(repair_items)
-df = st.experimental_data_editor(df, num_rows="dynamic")
+# Let the user input values directly using text input and number input
+for index, row in df.iterrows():
+    df.at[index, "Unit Cost"] = st.number_input(f"Unit Cost for {row['Category']}", value=row["Unit Cost"])
+    df.at[index, "Quantity"] = st.number_input(f"Quantity for {row['Category']}", value=row["Quantity"])
+
+# Display the updated dataframe as a table
+st.write("Updated Repair Costs Table")
+st.table(df)
 
 # Calculate Total Repair Costs
 df['Total Cost'] = df['Unit Cost'] * df['Quantity']
