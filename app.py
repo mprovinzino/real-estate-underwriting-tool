@@ -47,81 +47,105 @@ rehab_data = {
         {"description": "Cabinet, base under sink", "unit": "per", "unit_cost": 225},
         {"description": "Sink, Kitchen", "unit": "per", "unit_cost": 225},
     ],
-    # Add more sections as needed...
+    "Plumbing": [
+        {"description": "Pipe repair", "unit": "Per spot", "unit_cost": 80},
+        {"description": "Sewer scope", "unit": "House", "unit_cost": 375},
+        {"description": "Sub slab contingency", "unit": "", "unit_cost": 1500},
+        {"description": "Water Heater - DFW", "unit": "", "unit_cost": 1300},
+    ],
+    "Foundation": [
+        {"description": "Concrete foundation repair - DFW", "unit": "sqft", "unit_cost": 5},
+        {"description": "Contingency", "unit": "LS", "unit_cost": 3500},
+    ],
+    "Roof & Attic": [
+        {"description": "General maintenance", "unit": "Whole Rf", "unit_cost": 350},
+        {"description": "Full Replacement - DFW", "unit": "sqft", "unit_cost": 5},
+        {"description": "New decking", "unit": "sqft", "unit_cost": 0.90},
+    ],
+    "Living Areas": [
+        {"description": "Interior Paint - DFW", "unit": "sqft", "unit_cost": 1.85},
+        {"description": "Flooring - LVP - DFW", "unit": "sqft", "unit_cost": 3.75},
+        {"description": "Drywall repair", "unit": "Per", "unit_cost": 150},
+        {"description": "Window blinds", "unit": "Window", "unit_cost": 85},
+    ],
+    "Bathroom": [
+        {"description": "Granite top", "unit": "LF", "unit_cost": 100},
+        {"description": "Vanity", "unit": "Per", "unit_cost": 450},
+        {"description": "Bathroom sink", "unit": "Per sink", "unit_cost": 85},
+        {"description": "Shower surround", "unit": "Per", "unit_cost": 1100},
+    ],
+    "HVAC": [
+        {"description": "3 Ton - DFW", "unit": "", "unit_cost": 5750},
+        {"description": "4 Ton - DFW", "unit": "", "unit_cost": 6250},
+        {"description": "Furnace - DFW", "unit": "", "unit_cost": 1500},
+        {"description": "Ductwork (new)", "unit": "house", "unit_cost": 3000},
+        {"description": "Thermostat", "unit": "per", "unit_cost": 175},
+    ],
 }
 
 # Create columns for better arrangement
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 # Initialize total rehab cost
 total_rehab_cost = 0
 
 # Display sections in columns with expanders
 with col1:
-    with st.expander("General"):
-        for item in rehab_data["General"]:
-            # If the unit is 'sqft', use the square footage as the default quantity.
-            if item["unit"] == "sqft":
+    for section in ["General", "Kitchen & Laundry", "Plumbing"]:
+        with st.expander(section):
+            for item in rehab_data[section]:
                 quantity = st.number_input(
                     f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0, value=float(square_footage),
-                    key=f"General_{item['description']}_qty"
+                    min_value=0.0,
+                    value=1.0 if item['unit'] != 'sqft' else float(square_footage),
+                    key=f"{section}_{item['description']}_qty"
                 )
-            else:
-                quantity = st.number_input(
-                    f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0, value=1.0,
-                    key=f"General_{item['description']}_qty"
+                selected = st.checkbox(
+                    f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
+                    key=f"{section}_{item['description']}"
                 )
-            selected = st.checkbox(
-                f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
-                key=f"General_{item['description']}"
-            )
-            if selected:
-                total_item_cost = item["unit_cost"] * quantity
-                total_rehab_cost += total_item_cost
-                st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
-
-    with st.expander("Kitchen & Laundry"):
-        for item in rehab_data["Kitchen & Laundry"]:
-            quantity = st.number_input(
-                f"{item['description']} - Quantity ({item['unit']})",
-                min_value=0.0, value=1.0,
-                key=f"Kitchen_{item['description']}_qty"
-            )
-            selected = st.checkbox(
-                f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
-                key=f"Kitchen_{item['description']}"
-            )
-            if selected:
-                total_item_cost = item["unit_cost"] * quantity
-                total_rehab_cost += total_item_cost
-                st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+                if selected:
+                    total_item_cost = item["unit_cost"] * quantity
+                    total_rehab_cost += total_item_cost
+                    st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
 
 with col2:
-    with st.expander("Electrical"):
-        for item in rehab_data["Electrical"]:
-            # Use square footage as default quantity if unit is 'sqft'
-            if item["unit"] == "sqft":
+    for section in ["Electrical", "Foundation", "Roof & Attic"]:
+        with st.expander(section):
+            for item in rehab_data[section]:
                 quantity = st.number_input(
                     f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0, value=float(square_footage),
-                    key=f"Electrical_{item['description']}_qty"
+                    min_value=0.0,
+                    value=1.0 if item['unit'] != 'sqft' else float(square_footage),
+                    key=f"{section}_{item['description']}_qty"
                 )
-            else:
+                selected = st.checkbox(
+                    f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
+                    key=f"{section}_{item['description']}"
+                )
+                if selected:
+                    total_item_cost = item["unit_cost"] * quantity
+                    total_rehab_cost += total_item_cost
+                    st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+
+with col3:
+    for section in ["Living Areas", "Bathroom", "HVAC"]:
+        with st.expander(section):
+            for item in rehab_data[section]:
                 quantity = st.number_input(
                     f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0, value=1.0,
-                    key=f"Electrical_{item['description']}_qty"
+                    min_value=0.0,
+                    value=1.0 if item['unit'] != 'sqft' else float(square_footage),
+                    key=f"{section}_{item['description']}_qty"
                 )
-            selected = st.checkbox(
-                f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
-                key=f"Electrical_{item['description']}"
-            )
-            if selected:
-                total_item_cost = item["unit_cost"] * quantity
-                total_rehab_cost += total_item_cost
-                st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+                selected = st.checkbox(
+                    f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
+                    key=f"{section}_{item['description']}"
+                )
+                if selected:
+                    total_item_cost = item["unit_cost"] * quantity
+                    total_rehab_cost += total_item_cost
+                    st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
 
 # Display the total rehab cost
 st.write(f"**Total Rehab Cost:** ${total_rehab_cost:,.2f}")
