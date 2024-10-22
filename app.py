@@ -68,7 +68,7 @@ with st.expander("Property Details", expanded=True):
         estimated_arv = st.number_input("Estimated After Repair Value (ARV) ($)", min_value=0, value=300000)
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
 
-# Property Summary
+# Property Summary Header and content including rehab and offer details
 st.markdown(f"""
     <div class="summary-box">
         <div class="summary-title">
@@ -81,6 +81,13 @@ st.markdown(f"""
             <div class="summary-item">📏 <strong>Square Footage:</strong> {square_footage} sqft</div>
             <div class="summary-item">💰 <strong>Estimated ARV:</strong> ${estimated_arv:,.2f}</div>
             <div class="summary-item">🏠 <strong>Estimated Rent:</strong> ${estimated_rent:,.2f}</div>
+            <div class="summary-item">🔧 <strong>Total Rehab Cost:</strong> ${total_rehab_cost:,.2f}</div>
+        </div>
+        <hr style="border: 1px solid #ddd; margin: 20px 0;">
+        <div class="summary-row">
+            <div class="summary-item">📉 <strong>Low Range Offer (65%):</strong> ${low_range_offer:,.2f}</div>
+            <div class="summary-item">📈 <strong>Top Range Offer (78%):</strong> ${top_range_offer:,.2f}</div>
+            <div class="summary-item">🏷️ <strong>Max Suggested Offer (85%):</strong> ${max_suggested_offer:,.2f}</div>
         </div>
     </div>
 """, unsafe_allow_html=True)
