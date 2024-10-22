@@ -179,8 +179,6 @@ rehab_data = {
     ],
 }
 
-}
-
 # Rehab Estimation section
 with st.expander("**Rehab Estimation**", expanded=True):
     col1, col2 = st.columns(2)
