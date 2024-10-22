@@ -64,8 +64,11 @@ st.markdown(
 # Main title with consistent background styling
 st.markdown('<div class="main-title">Real Estate Underwriting Tool</div>', unsafe_allow_html=True)
 
-# Property Details section with only the bold text as the expander label
-with st.expander('<div style="text-align: center; font-weight: bold; font-size: 18px;">Property Details</div>', expanded=True):
+# Display a centered and bold "Property Details" header above the expander
+st.markdown('<div style="text-align: center; font-weight: bold; font-size: 18px;">Property Details</div>', unsafe_allow_html=True)
+
+# Property Details section inside the expander
+with st.expander("", expanded=True):
     col1, col2, col3 = st.columns(3)
     with col1:
         address = st.text_input("Address", "123 Main St")
@@ -78,6 +81,7 @@ with st.expander('<div style="text-align: center; font-weight: bold; font-size: 
     with col3:
         estimated_arv = st.number_input("Estimated After Repair Value (ARV) ($)", min_value=0, value=300000)
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
+
 # Data for Rehab Estimation with all categories and items
 rehab_data = {
     "General": [
