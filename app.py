@@ -64,9 +64,9 @@ st.markdown(
 # Main title with consistent background styling
 st.markdown('<div class="main-title">Real Estate Underwriting Tool</div>', unsafe_allow_html=True)
 
-# Property Details section
-with st.markdown('<div class="section-header">Property Details</div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3), expanded=True):
+# Property Details section with only the bold text as the expander label
+with st.expander("**Property Details**", expanded=True):
+    col1, col2, col3 = st.columns(3)
     with col1:
         address = st.text_input("Address", "123 Main St")
         state = st.selectbox("State", ["Georgia", "Florida", "Texas", "California"])
