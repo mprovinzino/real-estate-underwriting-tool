@@ -142,71 +142,34 @@ rehab_data = {
     ],
 }
 
-# Create columns for better arrangement in the Rehab Estimation section
-col1, col2, col3 = st.columns(3)
+# Single expander for all rehab categories with a dropdown for selecting a category
+with st.expander("Rehab Cost Estimation", expanded=True):
+    selected_category = st.selectbox("Select Rehab Category", list(rehab_data.keys()))
 
-# Display sections in columns with expanders
-for col, section_list in zip([col1, col2, col3], ["General", "Electrical", "Plumbing"]):
-    with col:
-        with st.expander(section_list, expanded=False):
-            for item in rehab_data[section_list]:
-                quantity = st.number_input(
-                    f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0,
-                    value=1.0 if item['unit'] != 'sqft' else float(square_footage),
-                    key=f"{section_list}_{item['description']}_qty"
-                )
-                selected = st.checkbox(
-                    f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
-                    key=f"{section_list}_{item['description']}"
-                )
-                if selected:
-                    total_item_cost = item["unit_cost"] * quantity
-                    st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
-# Add the remaining rehab estimation categories
-for col, section_list in zip([col1, col2, col3], ["Kitchen & Laundry", "Foundation", "Roof & Attic"]):
-    with col:
-        with st.expander(section_list, expanded=False):
-            for item in rehab_data[section_list]:
-                quantity = st.number_input(
-                    f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0,
-                    value=1.0 if item['unit'] != 'sqft' else float(square_footage),
-                    key=f"{section_list}_{item['description']}_qty"
-                )
-                selected = st.checkbox(
-                    f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
-                    key=f"{section_list}_{item['description']}"
-                )
-                if selected:
-                    total_item_cost = item["unit_cost"] * quantity
-                    st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+    # Display items for the selected category in a tab-like structure
+    total_category_cost = 0
+    for item in rehab_data[selected_category]:
+        quantity = st.number_input(
+            f"{item['description']} - Quantity ({item['unit']})",
+            min_value=0.0,
+            value=0.0 if item['unit'] != 'sqft' else float(square_footage),
+            key=f"{selected_category}_{item['description']}_qty"
+        )
+        
+        # Calculate cost for the item and add to the category's total if quantity > 0
+        item_cost = item["unit_cost"] * quantity
+        if quantity > 0:
+            st.write(f"**Cost for {item['description']}:** ${item_cost:,.2f}")
+            total_category_cost += item_cost
 
-# Continue with remaining sections for Living Areas, Bathroom, and HVAC
-for col, section_list in zip([col1, col2, col3], ["Living Areas", "Bathroom", "HVAC"]):
-    with col:
-        with st.expander(section_list, expanded=False):
-            for item in rehab_data[section_list]:
-                quantity = st.number_input(
-                    f"{item['description']} - Quantity ({item['unit']})",
-                    min_value=0.0,
-                    value=1.0 if item['unit'] != 'sqft' else float(square_footage),
-                    key=f"{section_list}_{item['description']}_qty"
-                )
-                selected = st.checkbox(
-                    f"{item['description']} (${item['unit_cost']:.2f} per {item['unit']})",
-                    key=f"{section_list}_{item['description']}"
-                )
-                if selected:
-                    total_item_cost = item["unit_cost"] * quantity
-                    st.write(f"**Cost for {item['description']}:** ${total_item_cost:,.2f}")
+    # Display the total cost for the selected category
+    st.markdown(f"### Total {selected_category} Cost: ${total_category_cost:,.2f}")
 
-# Calculate Total Rehab Cost
+# Calculate Total Rehab Cost across all categories
 total_rehab_cost = sum(
     item["unit_cost"] * st.session_state.get(f"{section}_{item['description']}_qty", 0)
     for section in rehab_data
     for item in rehab_data[section]
-    if st.session_state.get(f"{section}_{item['description']}")
 )
 st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
 
@@ -214,7 +177,7 @@ st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
 st.markdown('<div class="section-header">Offer Calculations</div>', unsafe_allow_html=True)
 
 # Calculate offer ranges based on ARV
-low_range_offer = estimated_arv * 0.65 - total_rehab_cost
+low_range_offer = estimated_arv * 0.65
 top_range_offer = estimated_arv * 0.78
 max_suggested_offer = estimated_arv * 0.85
 
@@ -242,4 +205,3 @@ vacancy = st.number_input("Vacancy Rate (% of Rent)", min_value=0.0, max_value=1
 # Calculate net cash flow considering the expenses
 net_cash_flow = annual_rent * (1 - (property_management + maintenance + vacancy))
 st.write(f"**Estimated Annual Net Cash Flow:** ${net_cash_flow:,.2f}")
-                    
