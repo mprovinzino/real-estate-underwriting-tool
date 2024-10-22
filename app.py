@@ -128,6 +128,9 @@ st.markdown(f"""
             <div class="summary-item">💰 <strong>Estimated ARV:</strong> ${estimated_arv:,.2f}</div>
             <div class="summary-item">🏠 <strong>Estimated Rent:</strong> ${estimated_rent:,.2f}</div>
             <div class="summary-item">🔧 <strong>Total Rehab Cost:</strong> ${total_rehab_cost:,.2f}</div>
+        </div>
+        <hr style="border: 1px solid #ddd; margin: 20px 0;">
+        <div class="summary-row">
             <div class="summary-item">📉 <strong>Low Range Offer (65%):</strong> ${low_range_offer:,.2f}</div>
             <div class="summary-item">📈 <strong>Top Range Offer (78%):</strong> ${top_range_offer:,.2f}</div>
             <div class="summary-item">🏷️ <strong>Max Suggested Offer (85%):</strong> ${max_suggested_offer:,.2f}</div>
