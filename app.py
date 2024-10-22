@@ -23,59 +23,66 @@ with st.expander("Property Details", expanded=True):
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
         market_rent = estimated_rent
 
- # Display entered property details with enhanced styling in columns
+# Display entered property details with enhanced styling in a centered container
 st.markdown(
     """
     <style>
     .summary-box {
         background-color: #f0f2f6;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 20px;
+        border-radius: 10px;
         border: 1px solid #ddd;
+        max-width: 800px;
+        margin: 0 auto; /* Center the box */
     }
     .summary-title {
         font-size: 24px;
         font-weight: bold;
         color: #333;
+        text-align: center;
         margin-bottom: 10px;
     }
     .summary-item {
         font-size: 18px;
         margin-bottom: 5px;
+        text-align: center;
     }
     </style>
     """, unsafe_allow_html=True
 )
 
-# Use columns for the summary items and move the address next to the title
-st.markdown(f"""
-    <div class="summary-box">
-        <div class="summary-title">
-            🏡 Property Summary - {address}, {state} 📍
-        </div>
-""", unsafe_allow_html=True)
-
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown(
-        f"""
-        <div class="summary-item">🛏️ <strong>Beds:</strong> {beds}</div>
-        <div class="summary-item">🛁 <strong>Baths:</strong> {baths}</div>
-        <div class="summary-item">📅 <strong>Year Built:</strong> {year_built}</div>
-        """, unsafe_allow_html=True
-    )
+# Use a centered column layout to ensure proper centering
+col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    st.markdown(
-        f"""
-        <div class="summary-item">📏 <strong>Square Footage:</strong> {square_footage} sqft</div>
-        <div class="summary-item">💰 <strong>Estimated ARV:</strong> ${estimated_arv:,.2f}</div>
-        <div class="summary-item">🏠 <strong>Estimated Rent:</strong> ${estimated_rent:,.2f}</div>
-        """, unsafe_allow_html=True
-    )
+    st.markdown(f"""
+        <div class="summary-box">
+            <div class="summary-title">
+                🏡 Property Summary - {address}, {state} 📍
+            </div>
+    """, unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+    # Display the property details in two columns within the centered box
+    inner_col1, inner_col2 = st.columns(2)
+    with inner_col1:
+        st.markdown(
+            f"""
+            <div class="summary-item">🛏️ <strong>Beds:</strong> {beds}</div>
+            <div class="summary-item">🛁 <strong>Baths:</strong> {baths}</div>
+            <div class="summary-item">📅 <strong>Year Built:</strong> {year_built}</div>
+            """, unsafe_allow_html=True
+        )
 
+    with inner_col2:
+        st.markdown(
+            f"""
+            <div class="summary-item">📏 <strong>Square Footage:</strong> {square_footage} sqft</div>
+            <div class="summary-item">💰 <strong>Estimated ARV:</strong> ${estimated_arv:,.2f}</div>
+            <div class="summary-item">🏠 <strong>Estimated Rent:</strong> ${estimated_rent:,.2f}</div>
+            """, unsafe_allow_html=True
+        )
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Use the estimated ARV and rent in calculations where appropriate
 arv = estimated_arv
