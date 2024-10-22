@@ -182,14 +182,26 @@ with st.expander("Rehab Estimation", expanded=True):
 # Offer Calculations section
 with st.expander("Offer Calculations", expanded=True):
     st.markdown('<div class="section-header">Offer Calculations</div>', unsafe_allow_html=True)
-    low_range_offer = estimated_arv * 0.65
-    top_range_offer = estimated_arv * 0.78
-    max_suggested_offer = estimated_arv * 0.85
+    
+    # Explanation of the offer calculations
+    st.info(
+        "Each offer price is calculated using the formula: "
+        "`Offer Price = (Percentage of ARV) - (Rehab Total)`.\n\n"
+        "- **Low Range Offer (65% of ARV)**: Suitable for properties needing extensive work.\n"
+        "- **Top Range Offer (78% of ARV)**: Typically for properties in better condition.\n"
+        "- **Max Suggested Offer (85% of ARV)**: For properties with minimal repairs required."
+    ) 
+    
+    # Calculate the offer prices using the formula: % of ARV - Rehab Total
+    low_range_offer = (estimated_arv * 0.65) - total_rehab_cost
+    top_range_offer = (estimated_arv * 0.78) - total_rehab_cost
+    max_suggested_offer = (estimated_arv * 0.85) - total_rehab_cost
 
     # Display offer calculations
-    st.write(f"**Low Range Offer (65% of ARV):** ${low_range_offer:,.2f}")
-    st.write(f"**Top Range Offer (78% of ARV):** ${top_range_offer:,.2f}")
-    st.write(f"**Max Suggested Offer (85% of ARV):** ${max_suggested_offer:,.2f}")
+    st.write(f"**Low Range Offer (65% of ARV - Rehab Total):** ${low_range_offer:,.2f}")
+    st.write(f"**Top Range Offer (78% of ARV - Rehab Total):** ${top_range_offer:,.2f}")
+    st.write(f"**Max Suggested Offer (85% of ARV - Rehab Total):** ${max_suggested_offer:,.2f}")
+
 
 # Cash Flow and ROI Estimation section
 with st.expander("Cash Flow & ROI Estimation", expanded=True):
