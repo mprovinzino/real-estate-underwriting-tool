@@ -54,6 +54,9 @@ st.markdown(
         justify-content: space-around;
         flex-wrap: wrap;
     }
+    .small-input input {
+        width: 80px !important;
+    }
     </style>
     """, unsafe_allow_html=True
 )
@@ -102,30 +105,18 @@ rehab_data = {
         {"description": "Clean appliances", "unit": "per appl", "unit_cost": 100},
         {"description": "Demo", "unit": "Guy/day", "unit_cost": 300},
         {"description": "Trash out", "unit": "Per", "unit_cost": 500},
-        {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725},
-        {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500},
-        {"description": "Termite treatment", "unit": "House", "unit_cost": 375},
-        {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500},
     ],
     "Electrical": [
         {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45},
         {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50},
-        {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750},
-        {"description": "GFCI", "unit": "Per", "unit_cost": 65},
-        {"description": "Smoke detectors", "unit": "per unit", "unit_cost": 30},
-        {"description": "New Panel Box - DFW", "unit": "Per", "unit_cost": 2000},
     ],
     "Plumbing": [
         {"description": "Pipe repair", "unit": "Per spot", "unit_cost": 80},
         {"description": "Sewer scope", "unit": "House", "unit_cost": 375},
-        {"description": "Sub slab contingency", "unit": "LS", "unit_cost": 1500},
-        {"description": "Water Heater - DFW", "unit": "Per", "unit_cost": 1300},
     ],
     "Kitchen & Laundry": [
         {"description": "Appl, Range", "unit": "per", "unit_cost": 750},
-        {"description": "Cabinets, Regular", "unit": "LF", "unit_cost": 110},
         {"description": "Granite - DFW", "unit": "LF", "unit_cost": 55},
-        {"description": "Appl, Wall oven", "unit": "per", "unit_cost": 1100},
     ],
     "Foundation": [
         {"description": "Concrete foundation repair - DFW", "unit": "sqft", "unit_cost": 5},
@@ -133,19 +124,15 @@ rehab_data = {
     ],
     "Roof & Attic": [
         {"description": "General maintenance", "unit": "Whole Rf", "unit_cost": 350},
-        {"description": "Full Replacement - DFW", "unit": "sqft", "unit_cost": 5},
     ],
     "Living Areas": [
         {"description": "Interior Paint - DFW", "unit": "sqft", "unit_cost": 1.85},
-        {"description": "Flooring - LVP - DFW", "unit": "sqft", "unit_cost": 3.75},
     ],
     "Bathroom": [
         {"description": "Granite top", "unit": "LF", "unit_cost": 100},
-        {"description": "Vanity", "unit": "Per", "unit_cost": 450},
     ],
     "HVAC": [
         {"description": "3 Ton - DFW", "unit": "", "unit_cost": 5750},
-        {"description": "Service call", "unit": "per unit", "unit_cost": 395},
     ],
 }
 
@@ -155,29 +142,40 @@ st.markdown('<div class="section-header">Rehab Estimation</div>', unsafe_allow_h
 # Initialize a total cost for the entire rehab
 total_rehab_cost = 0
 
-# Display all categories in a loop
-for section, items in rehab_data.items():
-    st.markdown(f"#### {section} Costs")
-    section_total = 0
+# Create columns for better arrangement of categories
+col1, col2 = st.columns(2)
 
-    # Loop through each item in the section
-    for item in items:
-        quantity = st.number_input(
-            f"{item['description']} - Quantity ({item['unit']})",
-            min_value=0.0,
-            value=0.0 if item['unit'] != 'sqft' else float(square_footage),
-            key=f"{section}_{item['description']}_qty"
-        )
-        
-        # Calculate the total cost for this item based on quantity
-        item_cost = item["unit_cost"] * quantity
-        if quantity > 0:
-            st.write(f"**Cost for {item['description']}:** ${item_cost:,.2f}")
-            section_total += item_cost
+# Group the sections to evenly distribute them between the two columns
+sections_group1 = ["General", "Electrical", "Plumbing", "Kitchen & Laundry"]
+sections_group2 = ["Foundation", "Roof & Attic", "Living Areas", "Bathroom", "HVAC"]
 
-    # Display the total cost for this section
-    st.markdown(f"**Total {section} Cost:** ${section_total:,.2f}")
-    total_rehab_cost += section_total
+# Display grouped sections in respective columns
+for col, sections in zip([col1, col2], [sections_group1, sections_group2]):
+    for section in sections:
+        with col:
+            st.markdown(f"#### {section} Costs")
+            section_total = 0
+
+            # Loop through each item in the section
+            for item in rehab_data[section]:
+                quantity = st.number_input(
+                    f"{item['description']} - Quantity ({item['unit']})",
+                    min_value=0,
+                    value=0,
+                    step=1,
+                    key=f"{section}_{item['description']}_qty",
+                    help=f"Unit Cost: ${item['unit_cost']:,.2f} per {item['unit']}"
+                )
+
+                # Calculate the total cost for this item based on quantity
+                item_cost = item["unit_cost"] * quantity
+                if quantity > 0:
+                    st.write(f"**Cost for {item['description']}:** ${item_cost:,.2f}")
+                    section_total += item_cost
+
+            # Display the total cost for this section
+            st.markdown(f"**Total {section} Cost:** ${section_total:,.2f}")
+            total_rehab_cost += section_total
 
 # Display the overall total rehab cost
 st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
