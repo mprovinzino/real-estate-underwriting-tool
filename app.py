@@ -198,7 +198,7 @@ with st.expander("Offer Calculations", expanded=True):
     max_suggested_offer = (estimated_arv * 0.85) - total_rehab_cost
 
     # Display offer calculations
-    st.write(f"**Low Range Offer (65% of ARV - Rehab Total):** ${low_range_offer:,.2f}")
+    st.write(f"**Low Range Offer:** ${low_range_offer:,.2f}")
     st.write(f"**Top Range Offer (78% of ARV - Rehab Total):** ${top_range_offer:,.2f}")
     st.write(f"**Max Suggested Offer (85% of ARV - Rehab Total):** ${max_suggested_offer:,.2f}")
 
