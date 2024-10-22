@@ -96,9 +96,6 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Rehab Estimation Header with consistent styling
-st.markdown('<div class="section-header">Rehab Estimation</div>', unsafe_allow_html=True)
-
 # Data for Rehab Estimation
 rehab_data = {
     "General": [
@@ -107,19 +104,28 @@ rehab_data = {
         {"description": "Trash out", "unit": "Per", "unit_cost": 500},
         {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725},
         {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500},
+        {"description": "Termite treatment", "unit": "House", "unit_cost": 375},
+        {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500},
     ],
     "Electrical": [
         {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45},
         {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50},
         {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750},
+        {"description": "GFCI", "unit": "Per", "unit_cost": 65},
+        {"description": "Smoke detectors", "unit": "per unit", "unit_cost": 30},
+        {"description": "New Panel Box - DFW", "unit": "Per", "unit_cost": 2000},
     ],
     "Plumbing": [
         {"description": "Pipe repair", "unit": "Per spot", "unit_cost": 80},
         {"description": "Sewer scope", "unit": "House", "unit_cost": 375},
+        {"description": "Sub slab contingency", "unit": "LS", "unit_cost": 1500},
+        {"description": "Water Heater - DFW", "unit": "Per", "unit_cost": 1300},
     ],
     "Kitchen & Laundry": [
         {"description": "Appl, Range", "unit": "per", "unit_cost": 750},
         {"description": "Cabinets, Regular", "unit": "LF", "unit_cost": 110},
+        {"description": "Granite - DFW", "unit": "LF", "unit_cost": 55},
+        {"description": "Appl, Wall oven", "unit": "per", "unit_cost": 1100},
     ],
     "Foundation": [
         {"description": "Concrete foundation repair - DFW", "unit": "sqft", "unit_cost": 5},
@@ -139,38 +145,41 @@ rehab_data = {
     ],
     "HVAC": [
         {"description": "3 Ton - DFW", "unit": "", "unit_cost": 5750},
+        {"description": "Service call", "unit": "per unit", "unit_cost": 395},
     ],
 }
 
-# Single expander for all rehab categories with a dropdown for selecting a category
-with st.expander("Rehab Cost Estimation", expanded=True):
-    selected_category = st.selectbox("Select Rehab Category", list(rehab_data.keys()))
+# Header for Rehab Estimation
+st.markdown('<div class="section-header">Rehab Estimation</div>', unsafe_allow_html=True)
 
-    # Display items for the selected category in a tab-like structure
-    total_category_cost = 0
-    for item in rehab_data[selected_category]:
+# Initialize a total cost for the entire rehab
+total_rehab_cost = 0
+
+# Display all categories in a loop
+for section, items in rehab_data.items():
+    st.markdown(f"#### {section} Costs")
+    section_total = 0
+
+    # Loop through each item in the section
+    for item in items:
         quantity = st.number_input(
             f"{item['description']} - Quantity ({item['unit']})",
             min_value=0.0,
             value=0.0 if item['unit'] != 'sqft' else float(square_footage),
-            key=f"{selected_category}_{item['description']}_qty"
+            key=f"{section}_{item['description']}_qty"
         )
         
-        # Calculate cost for the item and add to the category's total if quantity > 0
+        # Calculate the total cost for this item based on quantity
         item_cost = item["unit_cost"] * quantity
         if quantity > 0:
             st.write(f"**Cost for {item['description']}:** ${item_cost:,.2f}")
-            total_category_cost += item_cost
+            section_total += item_cost
 
-    # Display the total cost for the selected category
-    st.markdown(f"### Total {selected_category} Cost: ${total_category_cost:,.2f}")
+    # Display the total cost for this section
+    st.markdown(f"**Total {section} Cost:** ${section_total:,.2f}")
+    total_rehab_cost += section_total
 
-# Calculate Total Rehab Cost across all categories
-total_rehab_cost = sum(
-    item["unit_cost"] * st.session_state.get(f"{section}_{item['description']}_qty", 0)
-    for section in rehab_data
-    for item in rehab_data[section]
-)
+# Display the overall total rehab cost
 st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
 
 # Offer Calculations Header with consistent styling
