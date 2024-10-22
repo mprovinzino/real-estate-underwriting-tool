@@ -50,7 +50,7 @@ st.markdown(
     """, unsafe_allow_html=True
 )
 
-# Main title with consistent background styling
+# Main title
 st.markdown('<div class="main-title">Real Estate Underwriting Tool</div>', unsafe_allow_html=True)
 
 # Property Details section with bold text as the expander label
@@ -68,7 +68,7 @@ with st.expander("**Property Details**", expanded=True):
         estimated_arv = st.number_input("Estimated After Repair Value (ARV) ($)", min_value=0, value=300000)
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
 
-# Property Summary Header and content including rehab and offer details
+# Property Summary
 st.markdown(f"""
     <div class="summary-box">
         <div class="summary-title">
@@ -89,21 +89,13 @@ st.markdown(f"""
 rehab_data = {
     "General": [
         {"description": "Deep clean", "unit": "house", "unit_cost": 450},
-        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 0},
+        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 100},
         {"description": "Demo", "unit": "Guy/day", "unit_cost": 300},
         {"description": "Trash out", "unit": "Per", "unit_cost": 500},
         {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725},
         {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500},
         {"description": "Termite treatment", "unit": "House", "unit_cost": 375},
         {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500},
-    ],
-    "Electrical": [
-        {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45},
-        {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50},
-        {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750},
-        {"description": "GFCI", "unit": "Per", "unit_cost": 65},
-        {"description": "Smoke detectors", "unit": "per unit", "unit_cost": 30},
-        {"description": "New Panel Box - DFW", "unit": "Per", "unit_cost": 2000},
     ],
     # Add more categories as needed...
 }
@@ -113,9 +105,8 @@ with st.expander("**Rehab Estimation**", expanded=True):
     col1, col2 = st.columns(2)
     total_rehab_cost = 0
 
-    # Group sections into columns for better layout
-    sections_group1 = ["General", "Electrical", "Plumbing"]
-    sections_group2 = ["Foundation", "Roof & Attic", "Living Areas"]
+    sections_group1 = ["General", "Electrical"]
+    sections_group2 = ["Plumbing", "Foundation"]
 
     for col, sections in zip([col1, col2], [sections_group1, sections_group2]):
         for section in sections:
@@ -154,7 +145,7 @@ with st.expander("**Offer Calculations**", expanded=True):
     st.write(f"**Top Range Offer (78% of ARV - Rehab Total):** ${top_range_offer:,.2f}")
     st.write(f"**Max Suggested Offer (85% of ARV - Rehab Total):** ${max_suggested_offer:,.2f}")
 
-# Cash Flow and ROI section
+# Cash Flow and ROI section with bold text as the expander label
 with st.expander("**Cash Flow & ROI Estimation**", expanded=True):
     annual_rent = estimated_rent * 12
     total_investment = total_rehab_cost + max_suggested_offer
