@@ -186,7 +186,7 @@ with st.expander("Offer Calculations", expanded=True):
     # Explanation of the offer calculations
     st.info(
         "Each offer price is calculated using the formula: "
-        "`Offer Price = (Percentage of ARV) - (Rehab Total)`.\n\n"
+        "`Offer Price = (Percentage of ARV) - (Rehab Total)`\n\n"
         "- **Low Range Offer (65% of ARV)**: Suitable for properties needing extensive work.\n"
         "- **Top Range Offer (78% of ARV)**: Typically for properties in better condition.\n"
         "- **Max Suggested Offer (85% of ARV)**: For properties with minimal repairs required."
