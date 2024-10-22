@@ -65,9 +65,8 @@ st.markdown(
 st.markdown('<div class="main-title">Real Estate Underwriting Tool</div>', unsafe_allow_html=True)
 
 # Property Details section
-with st.expander("Property Details", expanded=True):
-    st.markdown('<div class="section-header">Property Details</div>', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3)
+with st.markdown('<div class="section-header">Property Details</div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)expanded=True):
     with col1:
         address = st.text_input("Address", "123 Main St")
         state = st.selectbox("State", ["Georgia", "Florida", "Texas", "California"])
