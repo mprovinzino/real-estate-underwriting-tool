@@ -23,10 +23,15 @@ with st.expander("Property Details", expanded=True):
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
         market_rent = estimated_rent
 
-    # Display entered property details in a summary box for easy review
-    st.info(f"**Property Summary:** {address}, {state}\n\n"
-            f"**Beds:** {beds} | **Baths:** {baths} | **Year Built:** {year_built}\n"
-            f"**Square Footage:** {square_footage} sqft | **Estimated ARV:** ${estimated_arv:,.2f} | **Estimated Rent:** ${estimated_rent:,.2f}")
+  # Display entered property details in a summary box for easy review
+st.info(
+    f"**Property Summary:**\n\n"
+    f"**Address:** {address}, {state}\n"
+    f"**Beds:** {beds} | **Baths:** {baths} | **Year Built:** {year_built}\n"
+    f"**Square Footage:** {square_footage} sqft\n"
+    f"**Estimated ARV:** ${estimated_arv:,.2f}\n"
+    f"**Estimated Rent:** ${estimated_rent:,.2f}"
+)
 
 # Use the estimated ARV and rent in calculations where appropriate
 arv = estimated_arv
