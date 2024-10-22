@@ -214,7 +214,7 @@ st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
 st.markdown('<div class="section-header">Offer Calculations</div>', unsafe_allow_html=True)
 
 # Calculate offer ranges based on ARV
-low_range_offer = estimated_arv * 0.65
+low_range_offer = estimated_arv * 0.65 - total_rehab_cost
 top_range_offer = estimated_arv * 0.78
 max_suggested_offer = estimated_arv * 0.85
 
