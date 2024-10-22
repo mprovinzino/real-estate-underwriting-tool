@@ -23,20 +23,44 @@ with st.expander("Property Details", expanded=True):
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
         market_rent = estimated_rent
 
-  # Display entered property details in a markdown box for easy review
+ # Display entered property details with enhanced styling
+st.markdown(
+    """
+    <style>
+    .summary-box {
+        background-color: #f0f2f6;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    .summary-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    .summary-item {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
+
 st.markdown(
     f"""
-    **Property Summary:**
-
-    - **Address:** {address}, {state}
-    - **Beds:** {beds}
-    - **Baths:** {baths}
-    - **Year Built:** {year_built}
-    - **Square Footage:** {square_footage} sqft
-    - **Estimated ARV:** ${estimated_arv:,.2f}
-    - **Estimated Rent:** ${estimated_rent:,.2f}
-    """
+    <div class="summary-box">
+        <div class="summary-title">🏡 Property Summary</div>
+        <div class="summary-item">📍 <strong>Address:</strong> {address}, {state}</div>
+        <div class="summary-item">🛏️ <strong>Beds:</strong> {beds}</div>
+        <div class="summary-item">🛁 <strong>Baths:</strong> {baths}</div>
+        <div class="summary-item">📅 <strong>Year Built:</strong> {year_built}</div>
+        <div class="summary-item">📏 <strong>Square Footage:</strong> {square_footage} sqft</div>
+        <div class="summary-item">💰 <strong>Estimated ARV:</strong> ${estimated_arv:,.2f}</div>
+        <div class="summary-item">🏠 <strong>Estimated Rent:</strong> ${estimated_rent:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True
 )
+
 
 # Use the estimated ARV and rent in calculations where appropriate
 arv = estimated_arv
