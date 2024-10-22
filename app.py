@@ -68,7 +68,119 @@ with st.expander("Property Details", expanded=True):
         estimated_arv = st.number_input("Estimated After Repair Value (ARV) ($)", min_value=0, value=300000)
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
 
-# Property Summary Header and content including rehab and offer details
+# Data for Rehab Estimation with all categories and items
+rehab_data = {
+    "General": [
+        {"description": "Deep clean", "unit": "house", "unit_cost": 450},
+        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 100},
+        {"description": "Demo", "unit": "Guy/day", "unit_cost": 300},
+        {"description": "Trash out", "unit": "Per", "unit_cost": 500},
+        {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725},
+        {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500},
+        {"description": "Termite treatment", "unit": "House", "unit_cost": 375},
+        {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500},
+    ],
+    "Exterior": [
+        {"description": "Siding repair", "unit": "", "unit_cost": 600},
+        {"description": "Complete New Siding", "unit": "sqft", "unit_cost": 3.05},
+        {"description": "Paint garage door (overhead)", "unit": "per door", "unit_cost": 100},
+        {"description": "Paint exterior door", "unit": "per door", "unit_cost": 250},
+        {"description": "Fascia repair", "unit": "LF", "unit_cost": 8},
+        {"description": "Soffit repair", "unit": "LF", "unit_cost": 10},
+        {"description": "Exterior Paint", "unit": "sqft", "unit_cost": 2.25},
+        {"description": "Yard clean", "unit": "yard", "unit_cost": 250},
+    ],
+    "Electrical": [
+        {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45},
+        {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50},
+        {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750},
+        {"description": "New Panel Box", "unit": "Per", "unit_cost": 2000},
+    ],
+    "Plumbing": [
+        {"description": "Pipe repair", "unit": "Per spot", "unit_cost": 80},
+        {"description": "Sewer scope", "unit": "House", "unit_cost": 375},
+        {"description": "Water Heater", "unit": "", "unit_cost": 1300},
+    ],
+    "Foundation": [
+        {"description": "Concrete foundation repair", "unit": "sqft", "unit_cost": 5},
+        {"description": "Contingency", "unit": "LS", "unit_cost": 3500},
+    ],
+    "Roof & Attic": [
+        {"description": "General maintenance", "unit": "Whole Rf", "unit_cost": 350},
+        {"description": "Full Replacement", "unit": "sqft", "unit_cost": 5},
+        {"description": "New decking", "unit": "sqft", "unit_cost": 0.9},
+    ],
+    "Living Areas": [
+        {"description": "Door hardware", "unit": "Per door", "unit_cost": 25},
+        {"description": "Interior Paint", "unit": "sqft", "unit_cost": 1.85},
+        {"description": "Flooring", "unit": "sqft", "unit_cost": 3.75},
+    ],
+    "Bathroom": [
+        {"description": "Granite top", "unit": "LF", "unit_cost": 100},
+        {"description": "Vanity", "unit": "Per", "unit_cost": 450},
+        {"description": "Toilet", "unit": "", "unit_cost": 225},
+    ],
+    "HVAC": [
+        {"description": "New HVAC - 3 Ton", "unit": "", "unit_cost": 5750},
+        {"description": "New Furnace", "unit": "", "unit_cost": 1500},
+        {"description": "Ductwork (new)", "unit": "house", "unit_cost": 1400},
+    ],
+}
+
+# Rehab Estimation section
+with st.expander("**Rehab Estimation**", expanded=True):
+    col1, col2 = st.columns(2)
+    total_rehab_cost = 0
+
+    sections_group1 = ["General", "Exterior", "Electrical", "Living Areas"]
+    sections_group2 = ["Plumbing", "Foundation", "Roof & Attic", "Bathroom", "HVAC"]
+
+    for col, sections in zip([col1, col2], [sections_group1, sections_group2]):
+        for section in sections:
+            with col:
+                st.markdown(f"#### {section} Costs")
+                section_total = 0
+                for item in rehab_data.get(section, []):
+                    quantity = st.number_input(
+                        f"{item['description']} - Quantity ({item['unit']})",
+                        min_value=0,
+                        value=0,
+                        step=1,
+                        key=f"{section}_{item['description']}_qty",
+                        help=f"Unit Cost: ${item['unit_cost']:,.2f} per {item['unit']}"
+                    )
+                    item_cost = item["unit_cost"] * quantity
+                    section_total += item_cost
+                st.markdown(f"**Total {section} Cost:** ${section_total:,.2f}")
+                total_rehab_cost += section_total
+
+    st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
+
+# Offer Calculations section
+with st.expander("**Offer Calculations**", expanded=True):
+    low_range_offer = (estimated_arv * 0.65) - total_rehab_cost
+    top_range_offer = (estimated_arv * 0.78) - total_rehab_cost
+    max_suggested_offer = (estimated_arv * 0.85) - total_rehab_cost
+
+    st.write(f"**Low Range Offer (65% of ARV - Rehab Total):** ${low_range_offer:,.2f}")
+    st.write(f"**Top Range Offer (78% of ARV - Rehab Total):** ${top_range_offer:,.2f}")
+    st.write(f"**Max Suggested Offer (85% of ARV - Rehab Total):** ${max_suggested_offer:,.2f}")
+
+# Cash Flow and ROI section
+with st.expander("**Cash Flow & ROI Estimation**", expanded=True):
+    annual_rent = estimated_rent * 12
+    total_investment = total_rehab_cost + max_suggested_offer
+    cap_rate = (annual_rent / total_investment) * 100 if total_investment > 0 else 0
+    st.write(f"**Cap Rate:** {cap_rate:.2f}%")
+
+    property_management = st.number_input("Property Management (% of Rent)", min_value=0.0, max_value=100.0, value=8.0) / 100
+    maintenance = st.number_input("Maintenance (% of Rent)", min_value=0.0, max_value=100.0, value=5.0) / 100
+    vacancy = st.number_input("Vacancy Rate (% of Rent)", min_value=0.0, max_value=100.0, value=5.0) / 100
+
+    net_cash_flow = annual_rent * (1 - (property_management + maintenance + vacancy))
+    st.write(f"**Estimated Annual Net Cash Flow:** ${net_cash_flow:,.2f}")
+
+# Property Summary, now placed after all calculations
 st.markdown(f"""
     <div class="summary-box">
         <div class="summary-title">
@@ -91,156 +203,3 @@ st.markdown(f"""
         </div>
     </div>
 """, unsafe_allow_html=True)
-
-# Data for Rehab Estimation with all categories and items
-rehab_data = {
-    "General": [
-        {"description": "Deep clean", "unit": "house", "unit_cost": 450},
-        {"description": "Clean appliances", "unit": "per appl", "unit_cost": 0},
-        {"description": "Demo", "unit": "Guy/day", "unit_cost": 300},
-        {"description": "Trash out", "unit": "Per", "unit_cost": 500},
-        {"description": "40 yd dumpster", "unit": "Per", "unit_cost": 725},
-        {"description": "Virtual Contingency", "unit": "LS", "unit_cost": 3500},
-        {"description": "Misc (type in)", "unit": "", "unit_cost": 0},
-        {"description": "Termite treatment", "unit": "House", "unit_cost": 375},
-        {"description": "GC Permit & Fees", "unit": "LS", "unit_cost": 1500},
-    ],
-    "Exterior": [
-        {"description": "Siding repair", "unit": "", "unit_cost": 600},
-        {"description": "Complete New Siding", "unit": "sqft", "unit_cost": 3.05},
-        {"description": "Paint garage door (overhead)", "unit": "per door", "unit_cost": 100},
-        {"description": "Paint exterior door", "unit": "per door", "unit_cost": 250},
-        {"description": "Fascia repair", "unit": "LF", "unit_cost": 8},
-        {"description": "Soffit repair", "unit": "LF", "unit_cost": 10},
-        {"description": "Caulk/general maint", "unit": "House", "unit_cost": 350},
-        {"description": "Exterior Paint - DFW", "unit": "sqft", "unit_cost": 2.25},
-        {"description": "Kwikset Smartkey Lockset", "unit": "LS", "unit_cost": 400},
-        {"description": "Overhead door (Double)", "unit": "Double", "unit_cost": 1300},
-        {"description": "Overhead door (single)", "unit": "per door", "unit_cost": 750},
-        {"description": "Garage door opener", "unit": "Per", "unit_cost": 385},
-        {"description": "Yard clean", "unit": "yard", "unit_cost": 250},
-        {"description": "Fence replacement", "unit": "LF", "unit_cost": 24},
-        {"description": "Trim tree", "unit": "Per tree", "unit_cost": 350},
-        {"description": "Pressure wash exterior", "unit": "Per", "unit_cost": 450},
-        {"description": "Build gate to backyard", "unit": "Per gate", "unit_cost": 300},
-    ],
-    "Electrical": [
-        {"description": "Plugs/switches/coverplates", "unit": "sqft", "unit_cost": 0.45},
-        {"description": "Smoke/CO2 Combos", "unit": "per unit", "unit_cost": 50},
-        {"description": "Weather head upgrade", "unit": "per unit", "unit_cost": 750},
-        {"description": "GFCI", "unit": "Per", "unit_cost": 65},
-        {"description": "Smoke detectors", "unit": "per unit", "unit_cost": 30},
-        {"description": "New Panel Box - DFW", "unit": "Per", "unit_cost": 2000},
-    ],
-    "Plumbing": [
-        {"description": "Pipe repair", "unit": "Per spot", "unit_cost": 80},
-        {"description": "Sewer scope", "unit": "House", "unit_cost": 375},
-        {"description": "Sub slab contingency", "unit": "LS", "unit_cost": 1500},
-        {"description": "Water Heater - DFW", "unit": "", "unit_cost": 1300},
-    ],
-    "Foundation": [
-        {"description": "Concrete foundation repair - DFW", "unit": "sqft", "unit_cost": 5},
-        {"description": "Contingency", "unit": "LS", "unit_cost": 3500},
-    ],
-    "Roof & Attic": [
-        {"description": "General maintenance", "unit": "Whole Rf", "unit_cost": 350},
-        {"description": "Full Replacement - DFW", "unit": "sqft", "unit_cost": 5},
-        {"description": "New decking", "unit": "sqft", "unit_cost": 0.9},
-    ],
-    "Living Areas": [
-        {"description": "Door hardware", "unit": "Per door", "unit_cost": 25},
-        {"description": "Interior Paint - DFW", "unit": "sqft", "unit_cost": 1.85},
-        {"description": "Flooring - LVP - DFW", "unit": "sqft", "unit_cost": 3.75},
-        {"description": "Drywall repair", "unit": "Per", "unit_cost": 150},
-        {"description": "Window blinds", "unit": "Window", "unit_cost": 85},
-        {"description": "Light Fixture", "unit": "per", "unit_cost": 85},
-        {"description": "New Ceiling Fan", "unit": "Per fan", "unit_cost": 125},
-        {"description": "Window Repair", "unit": "Per", "unit_cost": 145},
-        {"description": "Carpet", "unit": "sqft", "unit_cost": 1.67},
-        {"description": "Remove wallpaper", "unit": "sqft", "unit_cost": 2},
-        {"description": "Texture interior walls", "unit": "sqft", "unit_cost": 0.5},
-        {"description": "Replace sliding glass door", "unit": "", "unit_cost": 1200},
-    ],
-    "Bathroom": [
-        {"description": "Granite top", "unit": "LF", "unit_cost": 100},
-        {"description": "Vanity", "unit": "Per", "unit_cost": 450},
-        {"description": "Bathroom sink", "unit": "Per sink", "unit_cost": 85},
-        {"description": "Drain stops", "unit": "Per sink", "unit_cost": 25},
-        {"description": "Bathroom faucet", "unit": "Per sink", "unit_cost": 95},
-        {"description": "Tile floor", "unit": "sqft", "unit_cost": 2},
-        {"description": "Shower surround", "unit": "Per", "unit_cost": 1100},
-        {"description": "Shower floor pan", "unit": "Shower", "unit_cost": 625},
-        {"description": "Toilet", "unit": "", "unit_cost": 225},
-    ],
-    "HVAC": [
-        {"description": "Service call", "unit": "per unit", "unit_cost": 395},
-        {"description": "New HVAC - 3 Ton", "unit": "", "unit_cost": 5750},
-        {"description": "New HVAC - 4 Ton", "unit": "", "unit_cost": 6250},
-        {"description": "New HVAC - 5 Ton", "unit": "", "unit_cost": 6500},
-        {"description": "New Furnace", "unit": "", "unit_cost": 1500},
-        {"description": "Ductwork (new)", "unit": "house", "unit_cost": 1400},
-        {"description": "Replace Registers", "unit": "Per", "unit_cost": 25},
-        {"description": "Thermostat", "unit": "per", "unit_cost": 75},
-        {"description": "Filter cover", "unit": "Per", "unit_cost": 85},
-        {"description": "Cage for AC unit", "unit": "Per", "unit_cost": 350},
-    ],
-}
-
-# Rehab Estimation section
-with st.expander("**Rehab Estimation**", expanded=True):
-    col1, col2 = st.columns(2)
-    total_rehab_cost = 0
-
-    sections_group1 = ["General", "Electrical"]
-    sections_group2 = ["Plumbing", "Foundation"]
-
-    for col, sections in zip([col1, col2], [sections_group1, sections_group2]):
-        for section in sections:
-            with col:
-                st.markdown(f"#### {section} Costs")
-                section_total = 0
-                for item in rehab_data.get(section, []):
-                    quantity = st.number_input(
-                        f"{item['description']} - Quantity ({item['unit']})",
-                        min_value=0,
-                        value=0,
-                        step=1,
-                        key=f"{section}_{item['description']}_qty",
-                        help=f"Unit Cost: ${item['unit_cost']:,.2f} per {item['unit']}"
-                    )
-                    item_cost = item["unit_cost"] * quantity
-                    section_total += item_cost
-                total_rehab_cost += section_total
-
-    st.markdown(f"### Total Rehab Cost: ${total_rehab_cost:,.2f}")
-
-# Offer Calculations section with bold text as the expander label
-with st.expander("**Offer Calculations**", expanded=True):
-    st.info(
-        "Each offer price is calculated using the formula: "
-        "`Offer Price = (Percentage of ARV) - (Rehab Total)`.\n\n"
-        "- **Low Range Offer (65% of ARV)**: Suitable for properties needing extensive work.\n"
-        "- **Top Range Offer (78% of ARV)**: Typically for properties in better condition.\n"
-        "- **Max Suggested Offer (85% of ARV)**: For properties with minimal repairs required."
-    )
-    low_range_offer = (estimated_arv * 0.65) - total_rehab_cost
-    top_range_offer = (estimated_arv * 0.78) - total_rehab_cost
-    max_suggested_offer = (estimated_arv * 0.85) - total_rehab_cost
-
-    st.write(f"**Low Range Offer (65% of ARV - Rehab Total):** ${low_range_offer:,.2f}")
-    st.write(f"**Top Range Offer (78% of ARV - Rehab Total):** ${top_range_offer:,.2f}")
-    st.write(f"**Max Suggested Offer (85% of ARV - Rehab Total):** ${max_suggested_offer:,.2f}")
-
-# Cash Flow and ROI section with bold text as the expander label
-with st.expander("**Cash Flow & ROI Estimation**", expanded=True):
-    annual_rent = estimated_rent * 12
-    total_investment = total_rehab_cost + max_suggested_offer
-    cap_rate = (annual_rent / total_investment) * 100 if total_investment > 0 else 0
-    st.write(f"**Cap Rate:** {cap_rate:.2f}%")
-
-    property_management = st.number_input("Property Management (% of Rent)", min_value=0.0, max_value=100.0, value=8.0) / 100
-    maintenance = st.number_input("Maintenance (% of Rent)", min_value=0.0, max_value=100.0, value=5.0) / 100
-    vacancy = st.number_input("Vacancy Rate (% of Rent)", min_value=0.0, max_value=100.0, value=5.0) / 100
-
-    net_cash_flow = annual_rent * (1 - (property_management + maintenance + vacancy))
-    st.write(f"**Estimated Annual Net Cash Flow:** ${net_cash_flow:,.2f}")
