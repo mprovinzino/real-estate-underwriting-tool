@@ -162,4 +162,8 @@ with st.expander("**Cash Flow & ROI Estimation**", expanded=True):
     st.write(f"**Cap Rate:** {cap_rate:.2f}%")
 
     property_management = st.number_input("Property Management (% of Rent)", min_value=0.0, max_value=100.0, value=8.0) / 100
-    maintenance = st.number_input("Maintenance (% of Rent)", min_value=0.0
+    maintenance = st.number_input("Maintenance (% of Rent)", min_value=0.0, max_value=100.0, value=5.0) / 100
+    vacancy = st.number_input("Vacancy Rate (% of Rent)", min_value=0.0, max_value=100.0, value=5.0) / 100
+
+    net_cash_flow = annual_rent * (1 - (property_management + maintenance + vacancy))
+    st.write(f"**Estimated Annual Net Cash Flow:** ${net_cash_flow:,.2f}")
