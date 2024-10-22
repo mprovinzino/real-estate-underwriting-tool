@@ -23,7 +23,7 @@ with st.expander("Property Details", expanded=True):
         estimated_rent = st.number_input("Estimated Rent ($)", min_value=0, value=2500)
         market_rent = estimated_rent
 
- # Display entered property details with enhanced styling
+ # Display entered property details with enhanced styling in columns
 st.markdown(
     """
     <style>
@@ -37,6 +37,7 @@ st.markdown(
         font-size: 24px;
         font-weight: bold;
         color: #333;
+        margin-bottom: 10px;
     }
     .summary-item {
         font-size: 18px;
@@ -46,20 +47,34 @@ st.markdown(
     """, unsafe_allow_html=True
 )
 
-st.markdown(
-    f"""
+# Use columns for the summary items and move the address next to the title
+st.markdown(f"""
     <div class="summary-box">
-        <div class="summary-title">🏡 Property Summary</div>
-        <div class="summary-item">📍 <strong>Address:</strong> {address}, {state}</div>
+        <div class="summary-title">
+            🏡 Property Summary - 📍 {address}, {state}
+        </div>
+""", unsafe_allow_html=True)
+
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown(
+        f"""
         <div class="summary-item">🛏️ <strong>Beds:</strong> {beds}</div>
         <div class="summary-item">🛁 <strong>Baths:</strong> {baths}</div>
         <div class="summary-item">📅 <strong>Year Built:</strong> {year_built}</div>
+        """, unsafe_allow_html=True
+    )
+
+with col2:
+    st.markdown(
+        f"""
         <div class="summary-item">📏 <strong>Square Footage:</strong> {square_footage} sqft</div>
         <div class="summary-item">💰 <strong>Estimated ARV:</strong> ${estimated_arv:,.2f}</div>
         <div class="summary-item">🏠 <strong>Estimated Rent:</strong> ${estimated_rent:,.2f}</div>
-    </div>
-    """, unsafe_allow_html=True
-)
+        """, unsafe_allow_html=True
+    )
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 
 # Use the estimated ARV and rent in calculations where appropriate
