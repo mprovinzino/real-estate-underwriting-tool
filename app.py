@@ -179,8 +179,8 @@ with st.expander("**Cash Flow & ROI Estimation**", expanded=True):
 
     net_cash_flow = annual_rent * (1 - (property_management + maintenance + vacancy))
     st.write(f"**Estimated Annual Net Cash Flow:** ${net_cash_flow:,.2f}")
-
-# Property Summary, now placed after all calculations
+    
+# Property Summary Header and content including rehab and offer details
 st.markdown(f"""
     <div class="summary-box">
         <div class="summary-title">
@@ -203,3 +203,4 @@ st.markdown(f"""
         </div>
     </div>
 """, unsafe_allow_html=True)
+
