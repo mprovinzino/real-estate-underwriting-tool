@@ -199,9 +199,9 @@ with st.expander("Offer Calculations", expanded=True):
 
     # Display offer calculations
     st.write(f"**Low Range Offer:** ${low_range_offer:,.2f}")
-    st.write(f"**Top Range Offer (78% of ARV - Rehab Total):** ${top_range_offer:,.2f}")
-    st.write(f"**Max Suggested Offer (85% of ARV - Rehab Total):** ${max_suggested_offer:,.2f}")
-
+    st.write(f"**Top Range Offer:** ${top_range_offer:,.2f}")
+    st.write(f"**Max Suggested Offer:** ${max_suggested_offer:,.2f}")
+ 
 
 # Cash Flow and ROI Estimation section
 with st.expander("Cash Flow & ROI Estimation", expanded=True):
