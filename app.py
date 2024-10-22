@@ -51,7 +51,7 @@ st.markdown(
 st.markdown(f"""
     <div class="summary-box">
         <div class="summary-title">
-            🏡 Property Summary - 📍 {address}, {state}
+            🏡 Property Summary - {address}, {state} 📍
         </div>
 """, unsafe_allow_html=True)
 
