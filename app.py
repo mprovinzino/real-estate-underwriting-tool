@@ -34,18 +34,25 @@ st.markdown(
         border: 1px solid #ddd;
         max-width: 800px;
         margin: 0 auto; /* Center the box */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
     .summary-title {
-        font-size: 24px;
+        font-size: 22px;
         font-weight: bold;
         color: #333;
         text-align: center;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
     .summary-item {
-        font-size: 18px;
-        margin-bottom: 5px;
+        font-size: 16px;
+        margin-bottom: 8px;
         text-align: center;
+    }
+    .summary-icon {
+        font-size: 24px;
+        text-align: center;
+        margin-top: -5px;
+        margin-bottom: 10px;
     }
     </style>
     """, unsafe_allow_html=True
@@ -58,8 +65,9 @@ with col2:
     st.markdown(f"""
         <div class="summary-box">
             <div class="summary-title">
-                🏡 Property Summary - {address}, {state} 📍
+                🏡 Property Summary - {address}, {state}
             </div>
+            <div class="summary-icon">📍</div>
     """, unsafe_allow_html=True)
 
     # Display the property details in two columns within the centered box
