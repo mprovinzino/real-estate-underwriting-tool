@@ -53,8 +53,8 @@ st.markdown(
 # Main title
 st.markdown('<div class="main-title">Real Estate Underwriting Tool</div>', unsafe_allow_html=True)
 
-# Property Details section
-with st.expander("Property Details", expanded=True):
+# Property Details section with bold text as the expander label
+with st.expander("**Property Details**", expanded=True):
     col1, col2, col3 = st.columns(3)
     with col1:
         address = st.text_input("Address", "123 Main St")
